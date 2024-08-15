@@ -4,6 +4,8 @@
 
 This is a basic note-taking application with user authentication. It allows users to log in, add, edit, and delete notes. 
 
+## Hosted on https://anushri255.github.io/Notes.io/ 
+
 ## Features
 
 - **User Authentication:** Users can log in and create accounts.
