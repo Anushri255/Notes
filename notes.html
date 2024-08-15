@@ -46,16 +46,33 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             position: relative;
+            text-align: left;
         }
 
         .note button {
             position: absolute;
             top: 5px;
-            right: 5px;
             background-color: #f44336;
+            color: white;
+            border-radius: 3px;
+            padding: 5px 10px;
+            border: none;
         }
 
-        .note button:hover {
+        .note .edit-button {
+            right: 100px;
+            background-color: #2196F3;
+        }
+
+        .note .edit-button:hover {
+            background-color: #1976D2;
+        }
+
+        .note .delete-button {
+            right: 5px;
+        }
+
+        .note .delete-button:hover {
             background-color: #d32f2f;
         }
     </style>
@@ -82,8 +99,9 @@
                 const noteElement = document.createElement('div');
                 noteElement.classList.add('note');
                 noteElement.innerHTML = `
-                    ${note}
-                    <button onclick="deleteNote(${index})">Delete</button>
+                    <span id="note-text-${index}">${note}</span>
+                    <button class="edit-button" onclick="editNote(${index})">Edit</button>
+                    <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
                 `;
                 notesContainer.appendChild(noteElement);
             });
@@ -107,6 +125,16 @@
             loadNotes();
         }
 
+        function editNote(index) {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const noteText = prompt("Edit your note:", notes[index]);
+            if (noteText !== null && noteText.trim() !== "") {
+                notes[index] = noteText.trim();
+                localStorage.setItem('notes', JSON.stringify(notes));
+                loadNotes();
+            }
+        }
+
         logoutButton.addEventListener('click', function() {
             window.location.href = 'login.html';
         });
@@ -115,4 +143,3 @@
     </script>
 </body>
 </html>
-
