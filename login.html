@@ -8,30 +8,49 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background-color: #f68f8f;
             font-family: Arial, sans-serif;
         }
 
         .container {
+            background-color: #fff;
             text-align: center;
             border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
+            padding: 30px;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
         input[type="text"], input[type="password"] {
             display: block;
             margin: 10px auto;
             padding: 10px;
-            width: 80%;
+            width: calc(100% - 20px);
             border: 1px solid #ddd;
             border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            background-color: #e9f5ff;
+            outline: none;
+            border-color: #2196F3;
         }
 
         button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
         }
 
         button:hover {
@@ -40,6 +59,18 @@
 
         .toggle {
             margin-top: 20px;
+        }
+
+        #toggle-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            width: 100%;
+        }
+
+        #toggle-button:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -71,27 +102,20 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
-            
             const password = document.getElementById('password').value;
-            
             const users = JSON.parse(localStorage.getItem('users')) || [];
 
             if (title.textContent === 'Login') {
                 const user = users.find(u => u.username === username && u.password === password);
                 if (user) {
                     window.location.href = 'notes.html';
-                } 
-                else {
+                } else {
                     alert('Invalid credentials');
                 }
-            } 
-            
-            else {
+            } else {
                 if (users.some(u => u.username === username)) {
                     alert('Username already exists');
-                } 
-                
-                else {
+                } else {
                     users.push({ username, password });
                     localStorage.setItem('users', JSON.stringify(users));
                     alert('Account created successfully');
