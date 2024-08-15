@@ -5,86 +5,62 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f7f7f7;
             font-family: Arial, sans-serif;
         }
 
         .container {
-            width: 100%;
-            max-height: 100%;
-            max-width: 70%;
-            background-color: #fff;
+            width: 80%;
+            max-width: 600px;
             border: 1px solid #ddd;
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 100px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
         }
 
         input[type="text"] {
-            padding: 12px;
-            width: calc(100% - 104px);
+            padding: 10px;
+            width: 80%;
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-right: 4px;
-            margin-bottom: 20px;
         }
 
         button {
-            padding: 12px 20px;
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
-            border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        #notes-container {
-            margin-top: 20px;
-        }
-
         .note {
-            background-color: #f9f9f9;
-            padding: 12px;
+            margin-top: 10px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-bottom: 10px;
             position: relative;
+            text-align: left;
         }
 
-        .note span {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .note .edit-button,
-        .note .delete-button {
+        .note button {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 6px 12px;
+            top: 5px;
+            background-color: #f44336;
             color: white;
-            border: none;
             border-radius: 3px;
-            cursor: pointer;
+            padding: 5px 10px;
+            border: none;
         }
 
         .note .edit-button {
-            right: 90px;
+            right: 100px;
             background-color: #2196F3;
         }
 
@@ -93,41 +69,17 @@
         }
 
         .note .delete-button {
-            right: 10px;
-            background-color: #f44336;
+            right: 5px;
         }
 
         .note .delete-button:hover {
             background-color: #d32f2f;
         }
-
-        #logout {
-            margin-top: 20px;
-            background-color: #ff5722;
-        }
-
-        #logout:hover {
-            background-color: #e64a19;
-        }
-
-        h1 {
-    text-align: center;
-    background-color: #2196F3;
-    color: white;
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box; 
-    margin: 0 auto;
-    margin-bottom: 30px;
-}
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Your Notes</h1>
-
         <input type="text" id="new-note" placeholder="Add a new note">
         <button id="add-note">Add Note</button>
         <div id="notes-container"></div>
@@ -140,8 +92,13 @@
         const addNoteButton = document.getElementById('add-note');
         const logoutButton = document.getElementById('logout');
 
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            window.location.href = 'login.html'; 
+        }
+
         function loadNotes() {
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notes = JSON.parse(localStorage.getItem(`${loggedInUser}_notes`)) || [];
             notesContainer.innerHTML = '';
             notes.forEach((note, index) => {
                 const noteElement = document.createElement('div');
@@ -158,32 +115,33 @@
         addNoteButton.addEventListener('click', function() {
             const noteText = newNoteInput.value.trim();
             if (noteText) {
-                const notes = JSON.parse(localStorage.getItem('notes')) || [];
+                const notes = JSON.parse(localStorage.getItem(`${loggedInUser}_notes`)) || [];
                 notes.push(noteText);
-                localStorage.setItem('notes', JSON.stringify(notes));
+                localStorage.setItem(`${loggedInUser}_notes`, JSON.stringify(notes));
                 newNoteInput.value = '';
                 loadNotes();
             }
         });
 
         function deleteNote(index) {
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notes = JSON.parse(localStorage.getItem(`${loggedInUser}_notes`)) || [];
             notes.splice(index, 1);
-            localStorage.setItem('notes', JSON.stringify(notes));
+            localStorage.setItem(`${loggedInUser}_notes`, JSON.stringify(notes));
             loadNotes();
         }
 
         function editNote(index) {
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notes = JSON.parse(localStorage.getItem(`${loggedInUser}_notes`)) || [];
             const noteText = prompt("Edit your note:", notes[index]);
             if (noteText !== null && noteText.trim() !== "") {
                 notes[index] = noteText.trim();
-                localStorage.setItem('notes', JSON.stringify(notes));
+                localStorage.setItem(`${loggedInUser}_notes`, JSON.stringify(notes));
                 loadNotes();
             }
         }
 
         logoutButton.addEventListener('click', function() {
+            localStorage.removeItem('loggedInUser'); // Remove logged in user info
             window.location.href = 'login.html';
         });
 
